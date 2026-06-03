@@ -7,6 +7,34 @@ and `kubectl` commands by building something small, visual, and easy to fork.
 
 Fork it, play with it, break it, fix it, and make the duck family your own.
 
+## Duck Family Map
+
+```text
+Kind Pond
+├── duck-daisy
+│   ├── waddles
+│   ├── puddles
+│   └── nibbles
+│
+├── duck-mabel
+│   ├── bubbles
+│   ├── pebble
+│   └── sunny
+│
+└── duck-ruby
+    ├── sprout
+    ├── pip
+    └── quackie
+```
+
+Visual version:
+
+```text
+duck-daisy  🦆  ->  🐥 waddles   🐥 puddles   🐥 nibbles
+duck-mabel  🦆  ->  🐥 bubbles   🐥 pebble    🐥 sunny
+duck-ruby   🦆  ->  🐥 sprout    🐥 pip       🐥 quackie
+```
+
 ## Simple Terms
 
 **Container**

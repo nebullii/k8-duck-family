@@ -397,4 +397,14 @@ kubectl describe configmap duck-family-message -n duck-family
 
 ## 19. Next Step
 
+Added a visual duck family map to the README:
+
+```text
+duck-daisy -> waddles, puddles, nibbles
+duck-mabel -> bubbles, pebble, sunny
+duck-ruby -> sprout, pip, quackie
+```
+
+## 20. Next Step
+
 Read the ConfigMap from one pod.

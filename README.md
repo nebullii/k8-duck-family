@@ -315,6 +315,13 @@ learning-goal
 
 This is non-secret project configuration that pods can read later.
 
+The mother containers read these ConfigMap keys as environment variables:
+
+```text
+family-message -> FAMILY_MESSAGE
+pond-name -> POND_NAME
+```
+
 ## Useful Commands
 
 Check Podman containers:

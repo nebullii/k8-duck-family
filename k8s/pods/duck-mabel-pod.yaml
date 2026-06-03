@@ -13,10 +13,23 @@ spec:
   containers:
     - name: duck-mabel
       image: bitnami/kubectl:latest
+      env:
+        - name: FAMILY_MESSAGE
+          valueFrom:
+            configMapKeyRef:
+              name: duck-family-message
+              key: family-message
+        - name: POND_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: duck-family-message
+              key: pond-name
       command: ["sh", "-c"]
       args:
         - |
           echo "I am duck-mabel, the mother duck."
+          echo "Pond: $POND_NAME"
+          echo "Message: $FAMILY_MESSAGE"
           echo "I can talk to the Kubernetes API."
           kubectl get pods -n duck-family
           sleep 3600

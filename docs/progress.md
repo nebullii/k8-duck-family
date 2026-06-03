@@ -407,4 +407,37 @@ duck-ruby -> sprout, pip, quackie
 
 ## 20. Next Step
 
-Read the ConfigMap from one pod.
+Updated all mother containers so they read the ConfigMap as environment
+variables:
+
+```text
+family-message -> FAMILY_MESSAGE
+pond-name -> POND_NAME
+```
+
+The mother container logs now print the pond name and family message before
+calling the Kubernetes API.
+
+## 21. ConfigMap Read Verified
+
+Recreated the mother pods so Kubernetes uses the updated pod specs.
+
+Verified all mother pods are running:
+
+```text
+duck-daisy   4/4   Running
+duck-mabel   4/4   Running
+duck-ruby    4/4   Running
+```
+
+Verified the mother containers read the ConfigMap:
+
+```text
+Pond: Kind Pond
+Message: Stay in line and follow the mother duck.
+```
+
+## 22. Next Step
+
+Move to Services so learners can see how Kubernetes gives stable networking to
+pods.

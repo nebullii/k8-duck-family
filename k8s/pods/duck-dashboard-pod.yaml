@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: duck-dashboard
+  namespace: duck-family
+  labels:
+    app: duck-dashboard
+    role: dashboard
+spec:
+  containers:
+    - name: duck-dashboard
+      image: localhost/duck-dashboard:latest
+      imagePullPolicy: Never
+      ports:
+        - containerPort: 80

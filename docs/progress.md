@@ -439,5 +439,147 @@ Message: Stay in line and follow the mother duck.
 
 ## 22. Next Step
 
-Move to Services so learners can see how Kubernetes gives stable networking to
-pods.
+Created the static dashboard page:
+
+```text
+app/index.html
+```
+
+The page shows:
+
+```text
+duck-daisy -> waddles, puddles, nibbles
+duck-mabel -> bubbles, pebble, sunny
+duck-ruby -> sprout, pip, quackie
+```
+
+## 23. Next Step
+
+Created a `Containerfile` so the dashboard page can be packaged as a container
+image.
+
+File:
+
+```text
+app/Containerfile
+```
+
+It uses nginx and copies:
+
+```text
+app/index.html -> /usr/share/nginx/html/index.html
+```
+
+## 24. Next Step
+
+Built the dashboard image with Podman.
+
+Image:
+
+```text
+localhost/duck-dashboard:latest
+```
+
+## 25. Next Step
+
+Loaded the dashboard image into the kind cluster.
+
+Because kind was using Podman, the image was exported first:
+
+```bash
+podman save localhost/duck-dashboard:latest -o /tmp/duck-dashboard.tar
+```
+
+Then loaded into kind:
+
+```bash
+KIND_EXPERIMENTAL_PROVIDER=podman kind load image-archive /tmp/duck-dashboard.tar --name duck-family
+```
+
+## 26. Next Step
+
+Created the `duck-dashboard` Kubernetes pod.
+
+File:
+
+```text
+k8s/pods/duck-dashboard-pod.yaml
+```
+
+Verified:
+
+```text
+duck-dashboard   1/1   Running
+```
+
+## 27. Next Step
+
+Created a Service for the dashboard pod.
+
+File:
+
+```text
+k8s/services/duck-dashboard-service.yaml
+```
+
+Verified:
+
+```text
+duck-dashboard-service   ClusterIP   80/TCP   app=duck-dashboard
+```
+
+The Service points to the dashboard pod endpoint:
+
+```text
+10.244.0.11:80
+```
+
+In project terms:
+
+```text
+Service = front gate
+Pod = duck house
+Container = duck inside the house
+nginx = duck showing the web page
+```
+
+## 28. Next Step
+
+Added a picture-book style learner guide to the dashboard and docs.
+
+Files:
+
+```text
+app/index.html
+app/styles.css
+docs/visual-guide.md
+```
+
+The guide explains:
+
+```text
+Browser -> port-forward -> Service -> Pod -> Container -> nginx -> index.html
+```
+
+## 29. Next Step
+
+Rebuilt the dashboard image, reloaded it into kind, and recreated the dashboard
+pod.
+
+Verified:
+
+```text
+duck-dashboard   1/1   Running
+```
+
+Verified the Service serves the new guide content:
+
+```text
+How the pond works
+duck-dashboard-service
+```
+
+## 30. Next Step
+
+Open the dashboard in a browser with port-forward and continue improving the
+learner guide.

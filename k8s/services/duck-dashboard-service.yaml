@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: duck-dashboard-service
+  namespace: duck-family
+spec:
+  selector:
+    app: duck-dashboard
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+  type: ClusterIP

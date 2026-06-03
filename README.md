@@ -7,6 +7,12 @@ and `kubectl` commands by building something small, visual, and easy to fork.
 
 Fork it, play with it, break it, fix it, and make the duck family your own.
 
+Start with the picture-book walkthrough:
+
+```text
+docs/visual-guide.md
+```
+
 ## Duck Family Map
 
 ```text
@@ -145,6 +151,13 @@ Use it for settings like messages, names, themes, and feature flags.
 
 Do not use ConfigMaps for passwords, tokens, or API keys.
 
+**Service**
+
+A Service gives pods a stable network front door.
+
+Pods can be deleted and recreated with new IP addresses. A Service keeps a
+stable name and routes traffic to matching pods using labels.
+
 **Labels**
 
 Labels are key-value tags on Kubernetes objects.
@@ -187,6 +200,8 @@ Created so far:
 - The third multi-container pod: `duck-ruby`
 - Verified all three mother pods and their duckling containers
 - A ConfigMap named `duck-family-message`
+- A dashboard pod named `duck-dashboard`
+- A dashboard Service named `duck-dashboard-service`
 
 The running cluster currently appears in Podman as:
 
@@ -320,6 +335,70 @@ The mother containers read these ConfigMap keys as environment variables:
 ```text
 family-message -> FAMILY_MESSAGE
 pond-name -> POND_NAME
+```
+
+## Dashboard Page
+
+The project includes a simple static web page that shows all three duck
+families:
+
+```text
+app/index.html
+app/styles.css
+```
+
+This page will be packaged into a container image and served from Kubernetes by
+a dashboard pod.
+
+The dashboard also includes a picture-book style guide that explains the path
+from browser to port-forward to Service to pod to container to nginx.
+
+The image recipe is:
+
+```text
+app/Containerfile
+```
+
+It uses nginx and copies `app/index.html` into nginx's web directory.
+
+Local image name:
+
+```text
+localhost/duck-dashboard:latest
+```
+
+For kind with Podman, the image can be loaded with:
+
+```bash
+podman save localhost/duck-dashboard:latest -o /tmp/duck-dashboard.tar
+KIND_EXPERIMENTAL_PROVIDER=podman kind load image-archive /tmp/duck-dashboard.tar --name duck-family
+```
+
+Dashboard pod:
+
+```text
+k8s/pods/duck-dashboard-pod.yaml
+```
+
+Dashboard Service:
+
+```text
+k8s/services/duck-dashboard-service.yaml
+```
+
+The Service selects the dashboard pod with:
+
+```text
+app=duck-dashboard
+```
+
+In duck-project terms:
+
+```text
+Service = front gate
+Pod = duck house
+Container = duck inside the house
+nginx = duck showing the web page
 ```
 
 ## Useful Commands

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>K8 Duck Family</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="page">
+    <header>
+      <div>
+        <h1>K8 Duck Family</h1>
+        <p class="subtitle">A tiny Kubernetes pond where pods are duck houses, containers are ducks, and the dashboard shows every family in line.</p>
+      </div>
+      <div class="sun" aria-label="sun">☀️</div>
+    </header>
+
+    <main class="pond">
+      <div class="bubbles" aria-hidden="true">
+        <span class="bubble"></span>
+        <span class="bubble"></span>
+        <span class="bubble"></span>
+        <span class="bubble"></span>
+      </div>
+
+      <section class="families" aria-label="Duck families">
+        <article class="family">
+          <h2>duck-daisy</h2>
+          <div class="pod-label">pod: family=daisy</div>
+          <div class="mother-duck" aria-label="duck-daisy mother duck">
+            <div class="duck-body"><span class="eye"></span><span class="wing"></span></div>
+          </div>
+          <div class="ducklings">
+            <div class="duckling"><span>🐥</span><span>waddles</span></div>
+            <div class="duckling"><span>🐥</span><span>puddles</span></div>
+            <div class="duckling"><span>🐥</span><span>nibbles</span></div>
+          </div>
+        </article>
+
+        <article class="family">
+          <h2>duck-mabel</h2>
+          <div class="pod-label">pod: family=mabel</div>
+          <div class="mother-duck" aria-label="duck-mabel mother duck">
+            <div class="duck-body"><span class="eye"></span><span class="wing"></span></div>
+          </div>
+          <div class="ducklings">
+            <div class="duckling"><span>🐥</span><span>bubbles</span></div>
+            <div class="duckling"><span>🐥</span><span>pebble</span></div>
+            <div class="duckling"><span>🐥</span><span>sunny</span></div>
+          </div>
+        </article>
+
+        <article class="family">
+          <h2>duck-ruby</h2>
+          <div class="pod-label">pod: family=ruby</div>
+          <div class="mother-duck" aria-label="duck-ruby mother duck">
+            <div class="duck-body"><span class="eye"></span><span class="wing"></span></div>
+          </div>
+          <div class="ducklings">
+            <div class="duckling"><span>🐥</span><span>sprout</span></div>
+            <div class="duckling"><span>🐥</span><span>pip</span></div>
+            <div class="duckling"><span>🐥</span><span>quackie</span></div>
+          </div>
+        </article>
+      </section>
+
+      <section class="concepts" aria-label="Kubernetes concepts">
+        <div class="concept">cluster: duck-family</div>
+        <div class="concept">namespace: duck-family</div>
+        <div class="concept">service: duck-dashboard-service</div>
+        <div class="concept">configmap: duck-family-message</div>
+        <div class="concept">rbac: mother ducks can call the API</div>
+      </section>
+    </main>
+
+    <section class="storybook" aria-label="Kubernetes picture book guide">
+      <div class="section-heading">
+        <p class="eyebrow">picture book guide</p>
+        <h2>How the pond works</h2>
+      </div>
+
+      <div class="story-grid">
+        <article class="story-card">
+          <div class="story-art">💻</div>
+          <h3>1. Browser</h3>
+          <p>The learner opens the duck page from a laptop.</p>
+        </article>
+
+        <article class="story-card">
+          <div class="story-art">🌉</div>
+          <h3>2. Port-forward</h3>
+          <p>A temporary bridge carries the browser request into Kubernetes.</p>
+        </article>
+
+        <article class="story-card">
+          <div class="story-art">🚪</div>
+          <h3>3. Service</h3>
+          <p>The Service is the stable front gate. It finds the right pod by label.</p>
+        </article>
+
+        <article class="story-card">
+          <div class="story-art">🏠</div>
+          <h3>4. Pod</h3>
+          <p>The pod is the duck house where one or more containers live.</p>
+        </article>
+
+        <article class="story-card">
+          <div class="story-art">🦆</div>
+          <h3>5. Container</h3>
+          <p>The container is the duck doing the work. For this page, nginx serves HTML.</p>
+        </article>
+
+        <article class="story-card">
+          <div class="story-art">📄</div>
+          <h3>6. Web page</h3>
+          <p>The learner sees this pond, the families, and the Kubernetes layers.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="layer-book" aria-label="Kubernetes layers">
+      <div class="section-heading">
+        <p class="eyebrow">layer ladder</p>
+        <h2>From laptop to duck pond</h2>
+      </div>
+
+      <div class="ladder">
+        <div class="ladder-step"><span>💻</span><strong>Browser</strong><p>Visitor asks for the page.</p></div>
+        <div class="ladder-step"><span>🌉</span><strong>Port-forward</strong><p>Temporary bridge from laptop to cluster.</p></div>
+        <div class="ladder-step"><span>🚪</span><strong>Service</strong><p>Stable front gate named `duck-dashboard-service`.</p></div>
+        <div class="ladder-step"><span>🏠</span><strong>Pod</strong><p>Duck house named `duck-dashboard`.</p></div>
+        <div class="ladder-step"><span>🦆</span><strong>Container</strong><p>nginx duck serving files.</p></div>
+        <div class="ladder-step"><span>📄</span><strong>index.html</strong><p>The page shown to the learner.</p></div>
+      </div>
+    </section>
+  </div>
+</body>
+</html>

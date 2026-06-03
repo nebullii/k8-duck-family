@@ -1,0 +1,13 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: duck-mabel-rolebinding
+  namespace: duck-family
+subjects:
+  - kind: ServiceAccount
+    name: duck-mabel
+    namespace: duck-family
+roleRef:
+  kind: Role
+  name: mother-duck-role
+  apiGroup: rbac.authorization.k8s.io

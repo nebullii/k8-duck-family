@@ -1,0 +1,46 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: duck-ruby
+  namespace: duck-family
+  labels:
+    app: duck-family
+    role: mother
+    duck: ruby
+    family: ruby
+spec:
+  serviceAccountName: duck-ruby
+  containers:
+    - name: duck-ruby
+      image: bitnami/kubectl:latest
+      command: ["sh", "-c"]
+      args:
+        - |
+          echo "I am duck-ruby, the mother duck."
+          echo "I can talk to the Kubernetes API."
+          kubectl get pods -n duck-family
+          sleep 3600
+
+    - name: sprout
+      image: busybox:latest
+      command: ["sh", "-c"]
+      args:
+        - |
+          echo "Sprout is following duck-ruby."
+          sleep 3600
+
+    - name: pip
+      image: busybox:latest
+      command: ["sh", "-c"]
+      args:
+        - |
+          echo "Pip is following duck-ruby."
+          sleep 3600
+
+    - name: quackie
+      image: busybox:latest
+      command: ["sh", "-c"]
+      args:
+        - |
+          echo "Quackie is following duck-ruby."
+          sleep 3600

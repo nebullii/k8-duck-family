@@ -1,0 +1,46 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: duck-mabel
+  namespace: duck-family
+  labels:
+    app: duck-family
+    role: mother
+    duck: mabel
+    family: mabel
+spec:
+  serviceAccountName: duck-mabel
+  containers:
+    - name: duck-mabel
+      image: bitnami/kubectl:latest
+      command: ["sh", "-c"]
+      args:
+        - |
+          echo "I am duck-mabel, the mother duck."
+          echo "I can talk to the Kubernetes API."
+          kubectl get pods -n duck-family
+          sleep 3600
+
+    - name: bubbles
+      image: busybox:latest
+      command: ["sh", "-c"]
+      args:
+        - |
+          echo "Bubbles is following duck-mabel."
+          sleep 3600
+
+    - name: pebble
+      image: busybox:latest
+      command: ["sh", "-c"]
+      args:
+        - |
+          echo "Pebble is following duck-mabel."
+          sleep 3600
+
+    - name: sunny
+      image: busybox:latest
+      command: ["sh", "-c"]
+      args:
+        - |
+          echo "Sunny is following duck-mabel."
+          sleep 3600

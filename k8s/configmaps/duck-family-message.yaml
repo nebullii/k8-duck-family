@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: duck-family-message
+  namespace: duck-family
+data:
+  family-message: "Stay in line and follow the mother duck."
+  pond-name: "Kind Pond"
+  learning-goal: "Learn Kubernetes pods, containers, RBAC, and ConfigMaps."

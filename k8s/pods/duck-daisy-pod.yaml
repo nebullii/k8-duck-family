@@ -1,0 +1,46 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: duck-daisy
+  namespace: duck-family
+  labels:
+    app: duck-family
+    role: mother
+    duck: daisy
+    family: daisy
+spec:
+  serviceAccountName: duck-daisy
+  containers:
+    - name: duck-daisy
+      image: bitnami/kubectl:latest
+      command: ["sh", "-c"]
+      args:
+        - |
+          echo "I am duck-daisy, the mother duck."
+          echo "I can talk to the Kubernetes API."
+          kubectl get pods -n duck-family
+          sleep 3600
+
+    - name: waddles
+      image: busybox:latest
+      command: ["sh", "-c"]
+      args:
+        - |
+          echo "Waddles is following duck-daisy."
+          sleep 3600
+
+    - name: puddles
+      image: busybox:latest
+      command: ["sh", "-c"]
+      args:
+        - |
+          echo "Puddles is following duck-daisy."
+          sleep 3600
+
+    - name: nibbles
+      image: busybox:latest
+      command: ["sh", "-c"]
+      args:
+        - |
+          echo "Nibbles is following duck-daisy."
+          sleep 3600

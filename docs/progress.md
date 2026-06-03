@@ -581,5 +581,23 @@ duck-dashboard-service
 
 ## 30. Next Step
 
-Open the dashboard in a browser with port-forward and continue improving the
-learner guide.
+Redesigned the dashboard hero into a more visual pond scene.
+
+Added:
+
+```text
+learning topic badges
+sun
+reeds
+mother duck
+ducklings
+water ripples
+```
+
+Verified the updated page at desktop and mobile widths without horizontal
+overflow.
+
+## 31. Next Step
+
+Rebuild the dashboard image, reload it into kind, and recreate the dashboard
+pod.

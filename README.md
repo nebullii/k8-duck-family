@@ -200,7 +200,8 @@ Created so far:
 - The third multi-container pod: `duck-ruby`
 - Verified all three mother pods and their duckling containers
 - A ConfigMap named `duck-family-message`
-- A dashboard pod named `duck-dashboard`
+- A dashboard pod named `duck-dashboard` with a live `pond-watcher` kubectl sidecar
+- A read-only ServiceAccount, Role, and RoleBinding for the dashboard
 - A dashboard Service named `duck-dashboard-service`
 
 The running cluster currently appears in Podman as:
@@ -339,19 +340,66 @@ pond-name -> POND_NAME
 
 ## Dashboard Page
 
-The project includes a simple static web page that shows all three duck
-families:
+The project includes a web page that shows all three duck families **with live
+status pulled straight from the cluster**:
 
 ```text
-app/index.html
-app/styles.css
+app/index.html     the page
+app/styles.css     the look
+app/dashboard.js   polls the live cluster report and updates the page
 ```
 
-This page will be packaged into a container image and served from Kubernetes by
-a dashboard pod.
+This page is packaged into a container image and served from Kubernetes by a
+dashboard pod.
 
 The dashboard also includes a picture-book style guide that explains the path
 from browser to port-forward to Service to pod to container to nginx.
+
+### Live, not a poster
+
+The dashboard pod runs **two containers** (the sidecar pattern):
+
+```text
+duck-dashboard pod
+├── duck-dashboard   nginx, serves the page AND the live report
+└── pond-watcher     kubectl sidecar, writes state/state.json every 5s
+```
+
+They share an `emptyDir` volume. The `pond-watcher` sidecar runs
+`kubectl get pods` and `kubectl get configmap` every five seconds and writes the
+result into the shared volume, where nginx serves it as `state/state.json`. The
+browser polls that file and shows **real** pod phases, container readiness,
+restart counts, and the **real** ConfigMap values. Break a pod and the page
+notices.
+
+### Least-privilege RBAC
+
+The dashboard has its own identity with **read-only** access — a deliberate
+contrast with the all-powerful `mother-duck-role`:
+
+```text
+k8s/rbac/duck-dashboard-serviceaccount.yaml   identity for the dashboard pod
+k8s/rbac/dashboard-reader-role.yaml           get/list/watch on pods + configmaps only
+k8s/rbac/duck-dashboard-rolebinding.yaml      connects them
+```
+
+Prove it:
+
+```bash
+kubectl auth can-i list pods   -n duck-family --as=system:serviceaccount:duck-family:duck-dashboard   # yes
+kubectl auth can-i delete pods -n duck-family --as=system:serviceaccount:duck-family:duck-dashboard   # no
+```
+
+### One-command build + deploy
+
+```bash
+./scripts/deploy-dashboard.sh
+kubectl port-forward -n duck-family svc/duck-dashboard-service 8080:80
+# open http://localhost:8080
+```
+
+The script builds the image, loads it into kind, applies the RBAC + Service, and
+recreates the dashboard pod.
 
 The image recipe is:
 
@@ -359,7 +407,8 @@ The image recipe is:
 app/Containerfile
 ```
 
-It uses nginx and copies `app/index.html` into nginx's web directory.
+It uses nginx and copies `app/index.html`, `app/styles.css`, and
+`app/dashboard.js` into nginx's web directory.
 
 Local image name:
 

@@ -1,0 +1,13 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: dashboard-reader
+  namespace: duck-family
+# Least privilege on purpose.
+# The mother ducks use mother-duck-role, which allows everything ("*").
+# The dashboard only needs to LOOK at the pond, so it gets read-only access
+# to pods and configmaps and nothing else. This is the safe way to do RBAC.
+rules:
+  - apiGroups: [""]
+    resources: ["pods", "configmaps"]
+    verbs: ["get", "list", "watch"]

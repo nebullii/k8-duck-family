@@ -64,9 +64,8 @@ Service: duck-dashboard-service
   |
   v
 Pod: duck-dashboard
-  |
-  v
-Container: duck-dashboard
+  ├── Container: duck-dashboard   (nginx serves index.html + state.json)
+  └── Container: pond-watcher     (kubectl sidecar writes state.json)
   |
   v
 nginx serves index.html
@@ -79,6 +78,29 @@ Service = stable front gate
 Pod = duck house
 Container = duck doing the work
 nginx = app server showing the page
+sidecar = a helper duck that keeps watch on the pond and writes a report
+```
+
+## Picture 3b: How The Page Stays Live
+
+```text
+pond-watcher  --(kubectl get pods, every 5s)-->  Kubernetes API
+     |
+     v
+state.json in the shared emptyDir volume
+     |
+     v
+nginx serves state.json
+     |
+     v
+the browser polls it and updates the ducks
+```
+
+Simple idea:
+
+```text
+the page is not a poster
+it shows the real pods, and changes when they change
 ```
 
 ## Picture 4: How RBAC Works

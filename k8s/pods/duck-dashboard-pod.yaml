@@ -7,9 +7,50 @@ metadata:
     app: duck-dashboard
     role: dashboard
 spec:
+  # The dashboard runs as its own identity with read-only permissions.
+  serviceAccountName: duck-dashboard
+  # fsGroup lets the kubectl sidecar (uid 1001) write into the shared
+  # volume that nginx (root) also reads from.
+  securityContext:
+    fsGroup: 1001
   containers:
+    # 1. The nginx duck shows the web page AND serves the live pond report
+    #    that the sidecar writes into the shared volume.
     - name: duck-dashboard
       image: localhost/duck-dashboard:latest
       imagePullPolicy: Never
       ports:
         - containerPort: 80
+      volumeMounts:
+        - name: pond-state
+          mountPath: /usr/share/nginx/html/state
+
+    # 2. The pond-watcher sidecar asks Kubernetes "how is the pond doing?"
+    #    every few seconds and writes the answer to state/state.json.
+    #    This is the sidecar pattern: a helper container next to the main one.
+    - name: pond-watcher
+      image: bitnami/kubectl:latest
+      volumeMounts:
+        - name: pond-state
+          mountPath: /pond
+      command: ["sh", "-c"]
+      args:
+        - |
+          echo "pond-watcher is awake. Reporting on the pond every 5s."
+          while true; do
+            {
+              printf '{"updated":"%s","pods":' "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+              kubectl get pods -n duck-family -o json
+              printf ',"configmap":'
+              kubectl get configmap duck-family-message -n duck-family -o json
+              printf '}'
+            } > /pond/state.json.tmp 2>/dev/null \
+              && mv /pond/state.json.tmp /pond/state.json
+            sleep 5
+          done
+
+  volumes:
+    # An emptyDir is scratch space that lives as long as the pod.
+    # Both containers mount it, so the sidecar can hand files to nginx.
+    - name: pond-state
+      emptyDir: {}

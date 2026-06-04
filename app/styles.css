@@ -292,24 +292,80 @@ h1 {
   z-index: 1;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: start;
   gap: 24px;
+  /* Room for the roofs that overhang the top of each house. */
+  padding-top: 74px;
 }
 
+/* Each family pod is drawn as a little duck house: a pitched roof, walls
+   with a name sign, and a doorway the mother duck stands in. */
 .family {
-  min-height: 410px;
-  padding: 24px 18px 20px;
-  border: 3px solid rgba(47, 129, 84, 0.42);
-  border-radius: 42% 46% 44% 48%;
+  position: relative;
+  min-height: 430px;
+  padding: 30px 20px 26px;
+  border: 0;
+  border-radius: 6px 6px 22px 22px;
   background:
-    radial-gradient(circle at 25% 24%, rgba(255, 255, 255, 0.36), transparent 4.5rem),
-    linear-gradient(145deg, #7bd98e, var(--leaf));
-  box-shadow: 0 16px 0 rgba(47, 129, 84, 0.3), 0 26px 32px rgba(22, 49, 58, 0.16);
+    repeating-linear-gradient(180deg, rgba(22, 49, 58, 0.045) 0 1px, transparent 1px 28px),
+    linear-gradient(180deg, #fff7e6, #ffeccb);
+  box-shadow:
+    inset 0 0 0 3px rgba(255, 255, 255, 0.7),
+    inset 0 0 0 5px rgba(47, 129, 84, 0.22),
+    0 18px 0 rgba(47, 129, 84, 0.16),
+    0 28px 34px rgba(22, 49, 58, 0.18);
+  overflow: visible;
 }
 
+/* The roof: a triangle that overhangs the walls, with a round attic window. */
+.family::before {
+  content: "";
+  position: absolute;
+  left: -18px;
+  right: -18px;
+  top: -64px;
+  height: 84px;
+  background:
+    radial-gradient(circle at 50% 62%, #fffdf5 0 7px, rgba(22, 49, 58, 0.18) 7px 9px, transparent 9px),
+    linear-gradient(110deg, rgba(255, 255, 255, 0.28), rgba(0, 0, 0, 0.12));
+  background-color: #f08a5d;
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+  filter: drop-shadow(0 9px 0 rgba(22, 49, 58, 0.12));
+}
+
+/* The eave beam where the roof meets the walls. */
+.family::after {
+  content: "";
+  position: absolute;
+  left: -20px;
+  right: -20px;
+  top: 16px;
+  height: 13px;
+  border-radius: 7px;
+  background: #d4734a;
+  box-shadow: 0 3px 0 rgba(22, 49, 58, 0.14);
+}
+
+/* A different roof colour gives each house its own personality. */
+.family[data-pod="duck-daisy"]::before { background-color: #f08a5d; }
+.family[data-pod="duck-daisy"]::after  { background: #d4734a; }
+.family[data-pod="duck-mabel"]::before { background-color: #5bb6c9; }
+.family[data-pod="duck-mabel"]::after  { background: #3f97ab; }
+.family[data-pod="duck-ruby"]::before  { background-color: #b06fb0; }
+.family[data-pod="duck-ruby"]::after   { background: #945a94; }
+
+/* The family name hangs as a wooden sign under the eaves. */
 .family h2 {
-  margin: 0 0 6px;
+  position: relative;
+  z-index: 2;
+  width: fit-content;
+  margin: 4px auto 10px;
+  padding: 7px 18px;
+  border-radius: 12px;
+  background: #fffdf5;
+  box-shadow: 0 5px 0 rgba(22, 49, 58, 0.14), inset 0 0 0 2px rgba(22, 49, 58, 0.12);
   text-align: center;
-  font-size: 28px;
+  font-size: 24px;
 }
 
 .pod-label {
@@ -324,10 +380,17 @@ h1 {
 }
 
 .mother-duck {
+  position: relative;
   display: grid;
   justify-items: center;
   gap: 8px;
-  margin: 8px 0 18px;
+  width: 86%;
+  margin: 6px auto 18px;
+  padding: 18px 0 8px;
+  /* A recessed arched doorway for the mother duck to stand in. */
+  border-radius: 64% 64% 10px 10px / 46% 46% 10px 10px;
+  background: linear-gradient(180deg, rgba(120, 74, 40, 0.18), rgba(120, 74, 40, 0.06) 60%, rgba(255, 255, 255, 0));
+  box-shadow: inset 0 6px 12px rgba(22, 49, 58, 0.18), inset 0 0 0 2px rgba(120, 74, 40, 0.18);
 }
 
 .duck-body {
@@ -392,7 +455,7 @@ h1 {
 
 .duckling {
   display: grid;
-  grid-template-columns: 42px 1fr;
+  grid-template-columns: 42px 1fr auto auto;
   align-items: center;
   gap: 10px;
   min-height: 54px;
@@ -403,7 +466,14 @@ h1 {
   font-weight: 700;
 }
 
-.duckling span:first-child {
+.duckling .cstatus-text {
+  font-size: 11px;
+  font-weight: 700;
+  color: #5b6b70;
+  white-space: nowrap;
+}
+
+.duckling .duckling-emoji {
   display: grid;
   place-items: center;
   width: 42px;
@@ -542,7 +612,268 @@ h1 {
   font-size: 28px;
 }
 
+/* ---- Live status elements ---- */
+
+.status-dot,
+.cstatus-dot {
+  display: inline-block;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: #b9c3c6;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.55);
+  flex: none;
+}
+
+.dot-ok { background: #34c759; }
+.dot-warn { background: #ff9f0a; }
+.dot-bad { background: #ff453a; }
+.dot-idle { background: #b9c3c6; }
+
+.dot-ok { animation: pulse 2.4s ease-in-out infinite; }
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 0 3px rgba(52, 199, 89, 0.18); }
+  50% { box-shadow: 0 0 0 6px rgba(52, 199, 89, 0.06); }
+}
+
+.livebar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 26px;
+  padding: 14px 20px;
+  border: 3px solid rgba(255, 255, 255, 0.74);
+  border-radius: 22px;
+  background: rgba(255, 249, 232, 0.9);
+  box-shadow: 0 14px 30px rgba(22, 49, 58, 0.14);
+}
+
+.livebar.is-stale {
+  background: rgba(255, 240, 220, 0.92);
+}
+
+.conn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.conn .status-dot {
+  width: 14px;
+  height: 14px;
+}
+
+.conn-text {
+  display: grid;
+  line-height: 1.25;
+}
+
+.conn-label {
+  font-size: 16px;
+}
+
+.conn-detail {
+  font-size: 12px;
+  color: #6a787c;
+  font-weight: 700;
+}
+
+.livebar-stats {
+  display: flex;
+  gap: 22px;
+}
+
+.stat {
+  display: grid;
+  justify-items: center;
+  min-width: 62px;
+}
+
+.stat-num {
+  font-size: 24px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.stat-label {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: #6a787c;
+}
+
+.pod-status {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  width: fit-content;
+  margin: 0 auto 14px;
+  padding: 7px 14px;
+  border-radius: 999px;
+  background: #fffef9;
+  box-shadow: inset 0 0 0 1px rgba(22, 49, 58, 0.1), 0 4px 10px rgba(22, 49, 58, 0.12);
+}
+
+.pod-status .status-label {
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.pod-status .status-detail {
+  font-size: 12px;
+  font-weight: 700;
+  color: #5b6b70;
+}
+
+.mother-duck .cstatus {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.78);
+  box-shadow: inset 0 0 0 1px rgba(22, 49, 58, 0.08);
+}
+
+.mother-duck .cstatus-text {
+  font-size: 12px;
+  font-weight: 700;
+  color: #4f5f63;
+}
+
+.honest-note {
+  position: relative;
+  z-index: 1;
+  margin: 24px 0 0;
+  padding: 14px 18px;
+  border: 2px dashed rgba(47, 129, 84, 0.5);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.66);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.configmap-panel,
+.tryit {
+  margin-top: 28px;
+  padding: 26px;
+  border: 3px solid rgba(255, 255, 255, 0.76);
+  border-radius: 26px;
+  background: rgba(255, 249, 232, 0.82);
+  box-shadow: 0 18px 34px rgba(22, 49, 58, 0.14);
+}
+
+.config-grid {
+  display: grid;
+  gap: 10px;
+}
+
+.config-row {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  align-items: baseline;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: inset 0 0 0 1px rgba(22, 49, 58, 0.08);
+}
+
+.config-key {
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 13px;
+  font-weight: 700;
+  color: #2f6f75;
+}
+
+.config-val {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.config-foot {
+  margin: 14px 0 0;
+  font-size: 13px;
+  color: #6a787c;
+}
+
+.tryit-grid {
+  display: grid;
+  gap: 12px;
+}
+
+.tryit-row {
+  display: grid;
+  gap: 8px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: inset 0 0 0 1px rgba(22, 49, 58, 0.08);
+}
+
+.tryit-why {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.cmd {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.cmd code {
+  flex: 1;
+  overflow-x: auto;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: #16313a;
+  color: #d8f3e3;
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.copy {
+  flex: none;
+  padding: 8px 12px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--leaf-dark);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.copy:hover {
+  background: #246443;
+}
+
+code {
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.92em;
+}
+
 @media (max-width: 860px) {
+  .livebar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .config-row {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+
   .hero {
     grid-template-columns: 1fr;
   }
@@ -561,7 +892,7 @@ h1 {
 
   .family {
     min-height: auto;
-    border-radius: 28px;
+    border-radius: 6px 6px 22px 22px;
   }
 
   .story-grid {

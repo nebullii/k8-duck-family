@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>K8 Duck Family</title>
   <link rel="stylesheet" href="styles.css">
+  <script src="dashboard.js" defer></script>
 </head>
 <body>
   <div class="page">
@@ -37,6 +38,22 @@
       </div>
     </section>
 
+    <!-- Live status bar: real, refreshed every few seconds from the cluster. -->
+    <section class="livebar" data-connection aria-label="Live cluster status">
+      <div class="conn">
+        <span class="status-dot dot-idle"></span>
+        <div class="conn-text">
+          <strong class="conn-label">Waiting for the pond-watcher…</strong>
+          <span class="conn-detail">the sidecar writes a report every 5 seconds</span>
+        </div>
+      </div>
+      <div class="livebar-stats">
+        <div class="stat"><span class="stat-num" data-total="pods">–</span><span class="stat-label">pods running</span></div>
+        <div class="stat"><span class="stat-num" data-total="containers">–</span><span class="stat-label">containers ready</span></div>
+        <div class="stat"><span class="stat-num" data-total="restarts">–</span><span class="stat-label">restarts</span></div>
+      </div>
+    </section>
+
     <main class="pond">
       <div class="bubbles" aria-hidden="true">
         <span class="bubble"></span>
@@ -46,54 +63,92 @@
       </div>
 
       <section class="families" aria-label="Duck families">
-        <article class="family">
+        <article class="family" data-pod="duck-daisy">
           <h2>duck-daisy</h2>
           <div class="pod-label">pod: family=daisy</div>
-          <div class="mother-duck" aria-label="duck-daisy mother duck">
+          <div class="pod-status" data-pod-status>
+            <span class="status-dot dot-idle"></span>
+            <span class="status-label">…</span>
+            <span class="status-detail"></span>
+          </div>
+          <div class="mother-duck" data-container="duck-daisy" aria-label="duck-daisy mother duck">
             <div class="duck-body"><span class="eye"></span><span class="wing"></span></div>
+            <div class="cstatus"><span class="cstatus-dot dot-idle"></span><span class="cstatus-text">mother · …</span></div>
           </div>
           <div class="ducklings">
-            <div class="duckling"><span>🐥</span><span>waddles</span></div>
-            <div class="duckling"><span>🐥</span><span>puddles</span></div>
-            <div class="duckling"><span>🐥</span><span>nibbles</span></div>
+            <div class="duckling" data-container="waddles"><span class="duckling-emoji">🐥</span><span class="duckling-name">waddles</span><span class="cstatus-dot dot-idle"></span><span class="cstatus-text"></span></div>
+            <div class="duckling" data-container="puddles"><span class="duckling-emoji">🐥</span><span class="duckling-name">puddles</span><span class="cstatus-dot dot-idle"></span><span class="cstatus-text"></span></div>
+            <div class="duckling" data-container="nibbles"><span class="duckling-emoji">🐥</span><span class="duckling-name">nibbles</span><span class="cstatus-dot dot-idle"></span><span class="cstatus-text"></span></div>
           </div>
         </article>
 
-        <article class="family">
+        <article class="family" data-pod="duck-mabel">
           <h2>duck-mabel</h2>
           <div class="pod-label">pod: family=mabel</div>
-          <div class="mother-duck" aria-label="duck-mabel mother duck">
+          <div class="pod-status" data-pod-status>
+            <span class="status-dot dot-idle"></span>
+            <span class="status-label">…</span>
+            <span class="status-detail"></span>
+          </div>
+          <div class="mother-duck" data-container="duck-mabel" aria-label="duck-mabel mother duck">
             <div class="duck-body"><span class="eye"></span><span class="wing"></span></div>
+            <div class="cstatus"><span class="cstatus-dot dot-idle"></span><span class="cstatus-text">mother · …</span></div>
           </div>
           <div class="ducklings">
-            <div class="duckling"><span>🐥</span><span>bubbles</span></div>
-            <div class="duckling"><span>🐥</span><span>pebble</span></div>
-            <div class="duckling"><span>🐥</span><span>sunny</span></div>
+            <div class="duckling" data-container="bubbles"><span class="duckling-emoji">🐥</span><span class="duckling-name">bubbles</span><span class="cstatus-dot dot-idle"></span><span class="cstatus-text"></span></div>
+            <div class="duckling" data-container="pebble"><span class="duckling-emoji">🐥</span><span class="duckling-name">pebble</span><span class="cstatus-dot dot-idle"></span><span class="cstatus-text"></span></div>
+            <div class="duckling" data-container="sunny"><span class="duckling-emoji">🐥</span><span class="duckling-name">sunny</span><span class="cstatus-dot dot-idle"></span><span class="cstatus-text"></span></div>
           </div>
         </article>
 
-        <article class="family">
+        <article class="family" data-pod="duck-ruby">
           <h2>duck-ruby</h2>
           <div class="pod-label">pod: family=ruby</div>
-          <div class="mother-duck" aria-label="duck-ruby mother duck">
+          <div class="pod-status" data-pod-status>
+            <span class="status-dot dot-idle"></span>
+            <span class="status-label">…</span>
+            <span class="status-detail"></span>
+          </div>
+          <div class="mother-duck" data-container="duck-ruby" aria-label="duck-ruby mother duck">
             <div class="duck-body"><span class="eye"></span><span class="wing"></span></div>
+            <div class="cstatus"><span class="cstatus-dot dot-idle"></span><span class="cstatus-text">mother · …</span></div>
           </div>
           <div class="ducklings">
-            <div class="duckling"><span>🐥</span><span>sprout</span></div>
-            <div class="duckling"><span>🐥</span><span>pip</span></div>
-            <div class="duckling"><span>🐥</span><span>quackie</span></div>
+            <div class="duckling" data-container="sprout"><span class="duckling-emoji">🐥</span><span class="duckling-name">sprout</span><span class="cstatus-dot dot-idle"></span><span class="cstatus-text"></span></div>
+            <div class="duckling" data-container="pip"><span class="duckling-emoji">🐥</span><span class="duckling-name">pip</span><span class="cstatus-dot dot-idle"></span><span class="cstatus-text"></span></div>
+            <div class="duckling" data-container="quackie"><span class="duckling-emoji">🐥</span><span class="duckling-name">quackie</span><span class="cstatus-dot dot-idle"></span><span class="cstatus-text"></span></div>
           </div>
         </article>
       </section>
+
+      <p class="honest-note">
+        <strong>Honest footnote:</strong> in a real cluster each duckling would usually be
+        its own pod. We pack a mother and three ducklings into one pod here only so the whole
+        family is visible in one place — handy for learning, not how you would ship it.
+      </p>
 
       <section class="concepts" aria-label="Kubernetes concepts">
         <div class="concept">cluster: duck-family</div>
         <div class="concept">namespace: duck-family</div>
         <div class="concept">service: duck-dashboard-service</div>
         <div class="concept">configmap: duck-family-message</div>
-        <div class="concept">rbac: mother ducks can call the API</div>
+        <div class="concept">rbac: dashboard reads, mothers read+write</div>
       </section>
     </main>
+
+    <!-- Live ConfigMap: the real values the cluster is serving right now. -->
+    <section class="configmap-panel" aria-label="Live ConfigMap values">
+      <div class="section-heading">
+        <p class="eyebrow">live configmap · duck-family-message</p>
+        <h2>What the pond is saying</h2>
+      </div>
+      <div class="config-grid">
+        <div class="config-row"><span class="config-key">pond-name</span><span class="config-val" data-config="pond-name">…</span></div>
+        <div class="config-row"><span class="config-key">family-message</span><span class="config-val" data-config="family-message">…</span></div>
+        <div class="config-row"><span class="config-key">learning-goal</span><span class="config-val" data-config="learning-goal">…</span></div>
+      </div>
+      <p class="config-foot">These come straight from the ConfigMap over the read-only dashboard ServiceAccount. Edit the ConfigMap and they change here.</p>
+    </section>
 
     <section class="storybook" aria-label="Kubernetes picture book guide">
       <div class="section-heading">
@@ -133,10 +188,41 @@
         </article>
 
         <article class="story-card">
-          <div class="story-art">📄</div>
-          <h3>6. Web page</h3>
-          <p>The learner sees this pond, the families, and the Kubernetes layers.</p>
+          <div class="story-art">📡</div>
+          <h3>6. Sidecar</h3>
+          <p>A second container, <code>pond-watcher</code>, asks Kubernetes how every pod is doing and writes a live report next to the page.</p>
         </article>
+      </div>
+    </section>
+
+    <!-- Try it yourself: the kubectl behind what you see above. -->
+    <section class="tryit" aria-label="Try it yourself commands">
+      <div class="section-heading">
+        <p class="eyebrow">try it yourself</p>
+        <h2>Run the same commands the page runs</h2>
+      </div>
+      <div class="tryit-grid">
+        <div class="tryit-row">
+          <p class="tryit-why">See every pod's status (this is what the sidecar reads)</p>
+          <div class="cmd"><code>kubectl get pods -n duck-family</code><button class="copy" data-copy="kubectl get pods -n duck-family">copy</button></div>
+        </div>
+        <div class="tryit-row">
+          <p class="tryit-why">Look inside one family pod and its four containers</p>
+          <div class="cmd"><code>kubectl describe pod duck-daisy -n duck-family</code><button class="copy" data-copy="kubectl describe pod duck-daisy -n duck-family">copy</button></div>
+        </div>
+        <div class="tryit-row">
+          <p class="tryit-why">Read the ConfigMap shown in the live panel above</p>
+          <div class="cmd"><code>kubectl get configmap duck-family-message -n duck-family -o yaml</code><button class="copy" data-copy="kubectl get configmap duck-family-message -n duck-family -o yaml">copy</button></div>
+        </div>
+        <div class="tryit-row">
+          <p class="tryit-why">Prove the dashboard is read-only (this should say "no")</p>
+          <div class="cmd"><code>kubectl auth can-i delete pods -n duck-family --as=system:serviceaccount:duck-family:duck-dashboard</code><button class="copy" data-copy="kubectl auth can-i delete pods -n duck-family --as=system:serviceaccount:duck-family:duck-dashboard">copy</button></div>
+        </div>
+        <div class="tryit-row">
+          <p class="tryit-why">Delete a family and watch its card go grey — these are bare pods, so it will <em>not</em> come back on its own (that is what Deployments are for). Re-apply to bring it home.</p>
+          <div class="cmd"><code>kubectl delete pod duck-daisy -n duck-family</code><button class="copy" data-copy="kubectl delete pod duck-daisy -n duck-family">copy</button></div>
+          <div class="cmd"><code>kubectl apply -f k8s/pods/duck-daisy-pod.yaml</code><button class="copy" data-copy="kubectl apply -f k8s/pods/duck-daisy-pod.yaml">copy</button></div>
+        </div>
       </div>
     </section>
 
@@ -149,10 +235,17 @@
       <div class="ladder">
         <div class="ladder-step"><span>💻</span><strong>Browser</strong><p>Visitor asks for the page.</p></div>
         <div class="ladder-step"><span>🌉</span><strong>Port-forward</strong><p>Temporary bridge from laptop to cluster.</p></div>
-        <div class="ladder-step"><span>🚪</span><strong>Service</strong><p>Stable front gate named `duck-dashboard-service`.</p></div>
-        <div class="ladder-step"><span>🏠</span><strong>Pod</strong><p>Duck house named `duck-dashboard`.</p></div>
-        <div class="ladder-step"><span>🦆</span><strong>Container</strong><p>nginx duck serving files.</p></div>
-        <div class="ladder-step"><span>📄</span><strong>index.html</strong><p>The page shown to the learner.</p></div>
+        <div class="ladder-step"><span>🚪</span><strong>Service</strong><p>Stable front gate named <code>duck-dashboard-service</code>.</p></div>
+        <div class="ladder-step" data-dashboard-status>
+          <span>🏠</span><strong>Pod</strong>
+          <p>Duck house named <code>duck-dashboard</code> ·
+            <span class="status-dot dot-idle"></span>
+            <span class="status-label">…</span>
+            <span class="status-detail"></span>
+          </p>
+        </div>
+        <div class="ladder-step"><span>🦆</span><strong>Container</strong><p>nginx duck serving files, with the <code>pond-watcher</code> sidecar beside it.</p></div>
+        <div class="ladder-step"><span>📄</span><strong>index.html</strong><p>The live page shown to the learner.</p></div>
       </div>
     </section>
   </div>

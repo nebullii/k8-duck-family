@@ -601,3 +601,70 @@ overflow.
 
 Rebuild the dashboard image, reload it into kind, and recreate the dashboard
 pod.
+
+## 32. Live Dashboard With A Sidecar
+
+Turned the dashboard from a static poster into a live view of the real cluster.
+
+Added a second container to the dashboard pod (the sidecar pattern):
+
+```text
+duck-dashboard pod
+├── duck-dashboard   nginx, serves the page and the live report
+└── pond-watcher     kubectl sidecar, writes state.json every 5s
+```
+
+The two containers share an `emptyDir` volume. The `pond-watcher` sidecar runs:
+
+```bash
+kubectl get pods -n duck-family -o json
+kubectl get configmap duck-family-message -n duck-family -o json
+```
+
+every 5 seconds and writes the combined result to `state/state.json`, which
+nginx serves. The browser (`app/dashboard.js`) polls that file and shows real
+pod phases, container readiness, restart counts, and the real ConfigMap values.
+
+Concept learned:
+
+```text
+sidecar = a helper container next to the main one, sharing a volume
+emptyDir = scratch space that lives as long as the pod
+```
+
+## 33. Least-Privilege RBAC For The Dashboard
+
+Gave the dashboard its own read-only identity instead of reusing the powerful
+mother-duck-role.
+
+Files:
+
+```text
+k8s/rbac/duck-dashboard-serviceaccount.yaml
+k8s/rbac/dashboard-reader-role.yaml          get/list/watch on pods + configmaps
+k8s/rbac/duck-dashboard-rolebinding.yaml
+```
+
+Verified:
+
+```bash
+kubectl auth can-i list pods   --as=system:serviceaccount:duck-family:duck-dashboard -n duck-family   # yes
+kubectl auth can-i delete pods --as=system:serviceaccount:duck-family:duck-dashboard -n duck-family   # no
+```
+
+Concept learned:
+
+```text
+least privilege = give an identity only the access it actually needs
+```
+
+## 34. One-Command Deploy
+
+Added `scripts/deploy-dashboard.sh` to build the image, load it into kind, apply
+the RBAC and Service, and recreate the dashboard pod in one step.
+
+Verified the live page end-to-end:
+
+```text
+4/4 pods running, 14/14 containers ready, shown live and refreshing
+```
